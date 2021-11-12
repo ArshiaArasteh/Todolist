@@ -2,15 +2,14 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Task manager UI</title>
-  <link rel="stylesheet" href="./style.css">
-
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="<?= BASE_URL?>assets/css/style.css">
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div class="page">
   <div class="pageHeader">
-    <div class="title">Dashboard</div>
+    <div class="title">User Panel</div>
     <div class="userPanel"><i class="fa fa-chevron-down"></i><span class="username">John Doe </span><img src="https://s3.amazonaws.com/uifaces/faces/twitter/kolage/73.jpg" width="40" height="40"/></div>
   </div>
   <div class="main">
@@ -21,13 +20,24 @@
         </div>
       </div>
       <div class="menu">
-        <div class="title">Navigation</div>
-        <ul>
-          <li> <i class="fa fa-home"></i>Home</li>
-          <li><i class="fa fa-signal"></i>Activity</li>
-          <li class="active"> <i class="fa fa-tasks"></i>Manage Tasks</li>
-          <li> <i class="fa fa-envelope"></i>Messages</li>
+        <div class="title">Folders</div>
+        <ul class="folder-list">
+        
+        <li class= "<?= isset($_GET['folder_id']) ? '' : 'active' ?>"><a href = "<?= site_url() ?>"><i class="fa fa-folder"></i>All</li></a>
+         
+          <?php foreach ($folders as $folder): ?>
+
+            <li class="<?= ($_GET['folder_id'] == $folder->id) ? 'active' : '' ?>">
+              <a href="<?= site_url("?folder_id=$folder->id")?>"> <i class="fa fa-folder"></i><?= $folder->folder_name ?></a>
+              <a class="remove" href="?delete_folder=<?=$folder->id?>" onclick="return confirm('Are You Sure To Delete This Folder?');"><i class="fa fa-trash-o"></i></a>
+            </li>
+            <?php endforeach; ?>
+
         </ul>
+        <div>
+          <input type="text" placeholder="Add New Folder" id="AddFolderInput" name="addFolder">
+          <button id="AddFolderBtn" class="btn">+</button>
+        </div>
       </div>
     </div>
     <div class="view">
@@ -71,7 +81,33 @@
   </div>
 </div>
 <!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script><script  src="./script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script  src="<?=BASE_URL?>assets/js/script.js"></script>
+  <script>
+
+$(document).ready(function(){
+    $("#AddFolderBtn").click(function(){
+      var Input = $("#AddFolderInput");
+      $.ajax({
+        url : "procces/ajaxHandler.php",
+        method : "post",
+        dataType : "text",
+        data : {action : "addFolder" , name : Input.val()},
+        success : function(response){
+          if(response == "1"){
+            $('<a  href="#" style=" text-decoration: none; color: #107797;"><i class="fa fa-folder"></i></a>').appendTo("ul.folder-list");
+          location.reload();
+          }else{
+            alert(response);
+          }
+        
+        }
+       
+      });
+    });
+  });
+
+  </script>
 
 </body>
 </html>
