@@ -19,8 +19,24 @@ switch ($_POST["action"]) {
     }
     echo addFolder($folderName);
     break;
-  
+  case "addTask":
+    $taskName = $_POST["name"];
+    $folderId = $_POST["folderId"];
+    if(!isset($taskName) || strlen($taskName) < 3){
+      echo "Task Name Must Have More Than 3 charactors";
+      die();
+    }
+    echo addTask($taskName,$folderId);
+    break;
+    
+    case "doneSwitch":
+      $taskId = $_POST["taskId"];
+      if(!isset($taskId) && !is_numeric($taskId)){
+        echo "invalid task id";
+      }
+      echo isDone($taskId);
+      break;
+      
   default:
       diePage("invalid action");
-
 }

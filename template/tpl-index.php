@@ -26,10 +26,10 @@
         <li class= "<?= isset($_GET['folder_id']) ? '' : 'active' ?>"><a href = "<?= site_url() ?>"><i class="fa fa-folder"></i>All</li></a>
          
           <?php foreach ($folders as $folder): ?>
-
-            <li class="<?= ($_GET['folder_id'] == $folder->id) ? 'active' : '' ?>">
+           
+            <li class="<?= isset($_GET['folder_id']) == $folder->id ? 'active' : '' ?>">
               <a href="<?= site_url("?folder_id=$folder->id")?>"> <i class="fa fa-folder"></i><?= $folder->folder_name ?></a>
-              <a class="remove" href="?delete_folder=<?=$folder->id?>" onclick="return confirm('Are You Sure To Delete This Folder?');"><i class="fa fa-trash-o"></i></a>
+              <a class="remove" href="?delete_folder=<?=$folder->id?>" onclick="return confirm('Are You Sure To Delete This Folder?\n<?= $folder->folder_name ?>');"><i class="fa fa-trash-o"></i></a>
             </li>
             <?php endforeach; ?>
 
@@ -42,38 +42,30 @@
     </div>
     <div class="view">
       <div class="viewHeader">
-        <div class="title">Manage Tasks</div>
-        <div class="functions">
-          <div class="button active">Add New Task</div>
-          <div class="button">Completed</div>
-          <div class="button inverz"><i class="fa fa-trash-o"></i></div>
+        <div class="title">
+          <input type="text" placeholder="Add New Task" id="addTaskInput">
         </div>
+       
       </div>
       <div class="content">
         <div class="list">
           <div class="title">Today</div>
           <ul>
-            <li class="checked"><i class="fa fa-check-square-o"></i><span>Update team page</span>
-              <div class="info">
-                <div class="button green">In progress</div><span>Complete by 25/04/2014</span>
+            
+            <?php if (sizeof($tasks) > 0): ?>
+           <?php foreach ($tasks as $task): ?>
+            <li class="<?= $task->is_done ? 'checked' : '' ?>">
+            <i data-taskId="<?= $task->id ?>" class="isDone fa <?= $task->is_done ? 'fa-check-square-o' : 'fa-square-o' ?>"></i>
+            <span><?= $task->title ?> </span> 
+            <div class="info">
+              <span>created at <?= $task->created_at ?></span>
+              <a href="<?= site_url("?delete_task=$task->id") ?>" class="remove" onclick="return confirm('Are You Sure To Delete This Task\n<?= $task->title?>');">
+              <i class="fa fa-trash-o"></i></a>
               </div>
             </li>
-            <li><i class="fa fa-square-o"></i><span>Design a new logo</span>
-              <div class="info">
-                <div class="button">Pending</div><span>Complete by 10/04/2014</span>
-              </div>
-            </li>
-            <li><i class="fa fa-square-o"></i><span>Find a front end developer</span>
-              <div class="info"></div>
-            </li>
-          </ul>
-        </div>
-        <div class="list">
-          <div class="title">Tomorrow</div>
-          <ul>
-            <li><i class="fa fa-square-o"></i><span>Find front end developer</span>
-              <div class="info"></div>
-            </li>
+            <?php endforeach; ?>
+            <?php else: echo "<li>No Task Here...</li>";?>
+            <?php  endif; ?>
           </ul>
         </div>
       </div>
@@ -86,6 +78,7 @@
   <script>
 
 $(document).ready(function(){
+  // ajax for addFolder here
     $("#AddFolderBtn").click(function(){
       var Input = $("#AddFolderInput");
       $.ajax({
@@ -103,6 +96,38 @@ $(document).ready(function(){
         
         }
        
+      });
+    });
+
+    // ajax for addTAsk here
+    $("#addTaskInput").keypress(function(e){
+      var taskInput = $("#addTaskInput");
+      if(e.which == 13){
+        $.ajax({
+          url : 'procces/ajaxHandler.php',
+          method : "post",
+          data : {action : 'addTask' , folderId : <?= $folder->id?> , name : taskInput.val()},
+          success : function(response){
+            if(response == "1"){
+            location.reload();
+          }
+          else{
+            alert(response);
+          }}
+          
+        });
+      }
+    });
+
+    $("i.isDone").click(function(){
+      var tid = $(this).attr("data-taskId");
+      $.ajax({
+        url : "procces/ajaxHandler.php",
+        method : "post",
+        data : {action : 'doneSwitch' , taskId : tid},
+        success : function(response){
+          location.reload();
+        }
       });
     });
   });

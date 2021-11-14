@@ -244,7 +244,9 @@ body {
   float: right;
 }
 .main .view .content .list ul li .info span {
-  font-weight: 300;
+  font-weight: 200;
+  padding-right: 7px;
+  font-size: 12px;
 }
 .main .view .content .list ul li .info .button {
   float: right;
@@ -308,4 +310,21 @@ body {
 
 a{
   text-decoration : none;
+}
+
+pre{
+  background: white;
+  border-left: orange solid 4px;
+  padding: 30px 20px;
+  margin: 10px;
+  border-radius: 10px;
+  width: 80%;
+}
+#addTaskInput{
+  padding: 10px 5px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  width: 500px;
+  margin: 10px 5px;
+  outline: none;
 }

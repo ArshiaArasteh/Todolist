@@ -17,3 +17,10 @@ return false;
 function site_url($url = ''){
   return BASE_URL . $url;
 }
+
+function dd($value){
+  echo "<pre>";
+  var_dump($value);
+  echo "</pre>";
+  die();
+}
