@@ -2,6 +2,9 @@
 
 include "config/init.php";
 
+if(!isLoggedIn()){
+    header("location:auth.php");
+}
 
 if(isset($_GET["delete_folder"]) && is_numeric($_GET["delete_folder"])){
     echo deleteFolder();
