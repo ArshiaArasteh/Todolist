@@ -1,7 +1,7 @@
 <?php
 
 function getCurrentUserId(){
-    return 1;
+    return getLoggedInUser()->id ?? 0;
 }
 
 function getFolder(){

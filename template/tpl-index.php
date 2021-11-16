@@ -10,7 +10,10 @@
 <div class="page">
   <div class="pageHeader">
     <div class="title">User Panel</div>
-    <div class="userPanel"><i class="fa fa-chevron-down"></i><span class="username">John Doe </span><img src="https://s3.amazonaws.com/uifaces/faces/twitter/kolage/73.jpg" width="40" height="40"/></div>
+    <div class="userPanel">
+      <a href="<?= site_url("?logout=1")?>"><i class="fa fa-sign-out"></i></a>
+      <span class="username"><?= $loginUser->username ?? "Unknown" ?></span>
+    <img src="<?= $loginUser->image ?>" width="40" height="40"/></div>
   </div>
   <div class="main">
     <div class="nav">
